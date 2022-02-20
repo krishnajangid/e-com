@@ -23,7 +23,7 @@ class UsersModel(Base):
     mobile = Column(String(15), index=True, unique=True)
     profile = Column(String(255), nullable=False)
     is_verified = Column(Boolean, default=False)
-    password = Column(String(128), nullable=False)
+    password = Column(String(100), nullable=False)
     verified_at = Column(DateTime())
     created_at = Column(DateTime(), default=datetime.utcnow)
     updated_at = Column(DateTime(), default=datetime.utcnow)

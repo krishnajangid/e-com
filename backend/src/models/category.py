@@ -17,7 +17,7 @@ class CategoryModel(Base):
     __tablename__ = 'category'
 
     id = Column(Integer, primary_key=True, index=True)
-    parent_id = Column(Integer, ForeignKey("category.id"), primary_key=True, nullable=False)
+    parent_id = Column(Integer, ForeignKey("category.id"), primary_key=True, nullable=True)
     name = Column(String(255), nullable=False)
     description = Column(Text, nullable=False)
     image = Column(String(255))

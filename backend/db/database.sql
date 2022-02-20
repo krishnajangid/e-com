@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS users
      name        VARCHAR(50) NOT NULL,
      mobile      VARCHAR(15) NULL,
      email       VARCHAR(64) NOT NULL,
-     password    VARCHAR(32) NOT NULL,
+     password    VARCHAR(100) NOT NULL,
      profile     VARCHAR(255),
      is_verified TINYINT(1) DEFAULT '0',
      verified_at DATETIME NULL,
@@ -115,7 +115,7 @@ DROP TABLE IF EXISTS category;
 CREATE TABLE IF NOT EXISTS category
   (
      id          INT NOT NULL auto_increment,
-     parent_id   INT NOT NULL,
+     parent_id   INT NULL,
      name        VARCHAR(255) NOT NULL,
      description TEXT NOT NULL,
      image       VARCHAR(255) NOT NULL,

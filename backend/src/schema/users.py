@@ -18,3 +18,5 @@ class UserRegisterSchema(BaseModel):
     email: EmailStr
     password: str
     name: str
+    # class Config:
+    #     orm_mode = True

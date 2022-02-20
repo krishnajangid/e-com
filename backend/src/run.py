@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from fastapi_sqlalchemy import DBSessionMiddleware
 from starlette.middleware.cors import CORSMiddleware
 
-from api.users import router
+from api import router
 from utils.config import settings
 
 app = FastAPI(openapi_url=f"{settings.API_V1_STR}/openapi.json")

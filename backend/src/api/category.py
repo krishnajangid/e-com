@@ -1,23 +1,13 @@
-from fastapi import APIRouter, status, Request
+from fastapi import APIRouter, Depends
 from fastapi_sqlalchemy import db
 
-from models.users import Users
-from schema.category import CategorySchema, UserRegisterSchema
-from utils.auth import auth_required, role_required
+from models.category import CategoryModel
+from utils.auth import get_current_user
 
 router = APIRouter()
 
 
 @router.get("/category/")
-async def get_all_category_view():
-    users = db.session.query(Users).all()
-
-    return users
-
-
-@router.post("/user/register/")
-@role_required(roles=["Admin"])
-async def user_register_view(user: UserRegisterSchema):
-    users = db.session.query(Users).all()
-
+async def get_all_category_view(token=Depends(get_current_user)):
+    users = db.session.query(CategoryModel).all()
     return users

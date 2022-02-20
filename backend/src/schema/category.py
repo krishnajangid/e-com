@@ -2,7 +2,6 @@ from pydantic import BaseModel, EmailStr
 
 
 class CategorySchema(BaseModel):
-    email: EmailStr
     password: str
 
     class Config:
