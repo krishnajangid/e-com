@@ -5,3 +5,4 @@ pyjwt==2.3.0
 passlib==1.7.4
 FastAPI-SQLAlchemy==0.2.1
 PyMySQL==1.0.2
+email-validator==1.1.3

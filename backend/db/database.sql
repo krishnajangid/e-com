@@ -25,7 +25,6 @@ CREATE TABLE IF NOT EXISTS users
      email       VARCHAR(64) NOT NULL,
      password    VARCHAR(32) NOT NULL,
      profile     VARCHAR(255),
-     last_login  DATETIME DEFAULT NULL,
      is_verified TINYINT(1) DEFAULT '0',
      verified_at DATETIME NULL,
      created_at  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -87,16 +86,16 @@ CREATE TABLE IF NOT EXISTS users_address
   (
      id           INT NOT NULL auto_increment,
      users_id     INT NOT NULL,
-     state        VARCHAR(255) NOT NULL,
-     city         VARCHAR(255) NOT NULL,
+     state        VARCHAR(150) NOT NULL,
+     city         VARCHAR(150) NOT NULL,
      country      VARCHAR(100) NOT NULL,
-     zip_code     VARCHAR(50) NOT NULL,
+     zip_code     VARCHAR(6) NOT NULL,
      address_1    TEXT NOT NULL,
      address_2    TEXT,
-     landmark     TEXT,
+     landmark     VARCHAR(200),
      is_default   TINYINT(1) NOT NULL DEFAULT '0',
-     address_type ENUM('Home', 'Office', 'Other') DEFAULT NULL,
      is_deleted   TINYINT(1) NOT NULL DEFAULT '0',
+     address_type ENUM('Home', 'Office', 'Other') DEFAULT NULL,
      created_at   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
      updated_at   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
      PRIMARY KEY (id),
@@ -120,8 +119,8 @@ CREATE TABLE IF NOT EXISTS category
      name        VARCHAR(255) NOT NULL,
      description TEXT NOT NULL,
      image       VARCHAR(255) NOT NULL,
-     sort_order  INT NOT NULL,
-     status      TINYINT(1) NOT NULL DEFAULT '1',
+     sort_order  INT NULL,
+     active      TINYINT(1) NOT NULL DEFAULT '1',
      created_at  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
      updated_at  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
      PRIMARY KEY (id),
@@ -142,13 +141,13 @@ CREATE TABLE category_tag
   (
      id           INT NOT NULL auto_increment,
      category_id  INT NOT NULL,
-     seo_title    VARCHAR(255) DEFAULT NULL,
-     seo_desc     TEXT NOT NULL,
-     seo_keywords VARCHAR(255) DEFAULT NULL,
-     h1_tag       VARCHAR(255) DEFAULT NULL,
-     h2_tag       VARCHAR(255) DEFAULT NULL,
-     h3_tag       VARCHAR(255) DEFAULT NULL,
-     alt_img_tag  VARCHAR(255) NOT NULL,
+     seo_title    VARCHAR(255) NULL,
+     seo_desc     TEXT NULL,
+     seo_keywords VARCHAR(255) NULL,
+     h1_tag       VARCHAR(255) NULL,
+     h2_tag       VARCHAR(255) NULL,
+     h3_tag       VARCHAR(255) NULL,
+     alt_img_tag  VARCHAR(255) NULL,
      PRIMARY KEY (id)
   )
 engine=innodb
@@ -166,7 +165,7 @@ CREATE TABLE IF NOT EXISTS attribute
   (
      id         INT NOT NULL auto_increment,
      name       VARCHAR(255) NOT NULL,
-     sort_order INT NOT NULL,
+     sort_order INT NULL,
      created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
      updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
      PRIMARY KEY (id)
@@ -184,10 +183,10 @@ CREATE TABLE IF NOT EXISTS coupon
      description  TEXT,
      active       BOOLEAN DEFAULT true,
      coupon_type  ENUM('Amount', 'Percentage') NOT NULL,
-     coupon_value NUMERIC,
-     sort_order   INT NOT NULL,
-     start_at     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-     end_at       DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+     coupon_value NUMERIC NOT NULL,
+     sort_order   INT NULL,
+     start_at     DATETIME NOT NULL,
+     end_at       DATETIME NOT NULL,
      created_at   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
      updated_at   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
      PRIMARY KEY (id)
@@ -206,8 +205,8 @@ CREATE TABLE product
      category_id INT NOT NULL,
      name        VARCHAR(255) NOT NULL,
      sku         VARCHAR(10) NOT NULL,
-     description TEXT,
-     status      TINYINT(1) NOT NULL DEFAULT '1',
+     description TEXT NOT NULL,
+     active      TINYINT(1) NOT NULL DEFAULT '1',
      created_at  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
      updated_at  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
      PRIMARY KEY (id)
@@ -254,7 +253,7 @@ CREATE TABLE product_img
      thumb_img   VARCHAR(255) NOT NULL,
      file_type   ENUM('Image', 'Video') NOT NULL DEFAULT 'Image',
      alt_img_tag VARCHAR(255) NOT NULL,
-     sort_order  INT NOT NULL,
+     sort_order  INT NULL,
      PRIMARY KEY (id)
   )
 engine=innodb
@@ -312,11 +311,11 @@ ALTER TABLE product_tag
   ADD CONSTRAINT product_tag_product_id_fkey FOREIGN KEY (product_id) REFERENCES
   product (id) ON DELETE CASCADE ON UPDATE CASCADE;
 --
--- Table structure for table product_cart
+-- Table structure for table user_cart
 --
-DROP TABLE IF EXISTS product_cart;
+DROP TABLE IF EXISTS user_cart;
 
-CREATE TABLE product_cart
+CREATE TABLE user_cart
   (
      id         INT NOT NULL auto_increment,
      product_id INT NOT NULL,
@@ -328,12 +327,12 @@ CREATE TABLE product_cart
 engine=innodb
 DEFAULT charset=utf8;
 
-ALTER TABLE product_cart
-  ADD CONSTRAINT product_cart_product_id_fkey FOREIGN KEY (product_id)
+ALTER TABLE user_cart
+  ADD CONSTRAINT user_cart_product_id_fkey FOREIGN KEY (product_id)
   REFERENCES product (id) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE product_cart
-  ADD CONSTRAINT product_cart_users_id_fkey FOREIGN KEY (users_id) REFERENCES
+ALTER TABLE user_cart
+  ADD CONSTRAINT user_cart_users_id_fkey FOREIGN KEY (users_id) REFERENCES
   users (id) ON DELETE CASCADE ON UPDATE CASCADE;
 --
 -- Table structure for table product_attribute
@@ -424,7 +423,6 @@ CREATE TABLE banner
      sort_order    INT NOT NULL,
      title         VARCHAR(255) NOT NULL,
      sub_title     VARCHAR(255) NOT NULL,
-     has_rout_link BOOLEAN NOT NULL DEFAULT false,
      rout_link     VARCHAR(255) NOT NULL,
      PRIMARY KEY (id)
   )
