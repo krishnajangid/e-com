@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 
-from api import category, users
+from api import users
+from api.category import api as category
 
 router = APIRouter()
 router.include_router(category.router)
