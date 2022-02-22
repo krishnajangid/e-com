@@ -52,8 +52,7 @@ class UserAddressModel(Base):
     __tablename__ = 'users_address'
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey(UsersModel.id), primary_key=True, nullable=False)
-    roles_id = Column(Integer, ForeignKey(RolesModel.id), primary_key=True, nullable=False)
+    users_id = Column(Integer, ForeignKey(UsersModel.id), primary_key=True, nullable=False)
 
     state = Column(String(150), nullable=False)
     city = Column(String(150), nullable=False)
@@ -64,6 +63,6 @@ class UserAddressModel(Base):
     landmark = Column(String(200))
     is_default = Column(Boolean, default=False)
     is_deleted = Column(Boolean, default=False)
-    address_type = Column(Enum('Home', 'Office', 'Other'))
+    address_type = Column(Enum('Home', 'Office', 'Other'), default="Home")
     created_at = Column(DateTime(), default=datetime.utcnow)
     updated_at = Column(DateTime(), default=datetime.utcnow)

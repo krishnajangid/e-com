@@ -11,8 +11,7 @@ router = APIRouter()
 async def get_all_category_view(
         page: int = Query(default=1, gt=0, lt=10),
         per_page: int = Query(default=20, gt=0, lt=21),
-        token=Depends(get_current_user)
+        _=Depends(get_current_user)
 ) -> PaginationSchema[CategoryOutSchema]:
-
     category_mod_obj = CategoryMod()
     return category_mod_obj.get_all_category(page, per_page)
