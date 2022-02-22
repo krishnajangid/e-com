@@ -1,7 +1,9 @@
+from typing import Union
+
 from pydantic import BaseModel, EmailStr
 
 
-class UserLoginSchema(BaseModel):
+class UserLoginInSchema(BaseModel):
     email: EmailStr
     password: str
 
@@ -14,9 +16,12 @@ class UserLoginSchema(BaseModel):
         }
 
 
+class UserLoginOutSchema(BaseModel):
+    access_token: str
+    user_id: int
+
+
 class UserRegisterSchema(BaseModel):
     email: EmailStr
     password: str
     name: str
-    # class Config:
-    #     orm_mode = True

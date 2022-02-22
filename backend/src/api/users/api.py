@@ -2,16 +2,15 @@ from fastapi import APIRouter, status, HTTPException
 from fastapi_sqlalchemy import db
 
 from models.users import UsersModel
-from schema.users import UserLoginSchema, UserRegisterSchema
+from schema.users import UserLoginInSchema, UserRegisterSchema, UserLoginOutSchema
 from utils.auth import (get_password_hash, authenticate_user, create_access_token)
 
 router = APIRouter()
 
 
-@router.post("/user/login/")
-async def user_login_view(user: UserLoginSchema):
+@router.post("/user/login/", response_model=UserLoginOutSchema)
+async def user_login_view(user: UserLoginInSchema) -> UserLoginOutSchema:
     user = await authenticate_user(email=user.email, password=user.password)
-    print(user)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -19,10 +18,11 @@ async def user_login_view(user: UserLoginSchema):
             headers={"Authenticate": "Bearer"}
         )
 
-    return {
+    data = {
         "access_token": await create_access_token(user.id),
         "user_id": user.id
     }
+    return data
 
 
 @router.post("/user/register/")

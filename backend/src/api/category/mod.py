@@ -9,12 +9,20 @@ class CategoryMod:
         pass
 
     def get_all_category(self, page, per_page):
-        category_obj_list = db.session.query(CategoryModel).filter(
+        category_obj = db.session.query(CategoryModel).filter(
             CategoryModel.active == True,
             CategoryModel.parent_id == None
-        ).offset((page * per_page) - per_page).limit(per_page).all()
+        )
+        total_result = category_obj.count()
+        category_obj_list = category_obj.offset((page * per_page) - per_page).limit(per_page).all()
+        result_dict = {
+            "page_number": page,
+            "page_size": per_page,
+            "total": total_result,
+            "result": self.__get_category(category_obj_list)
+        }
 
-        return self.__get_category(category_obj_list)
+        return result_dict
 
     def __get_category(self, category_obj_list):
         category_dict_list = []
