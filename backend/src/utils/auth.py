@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 import jwt
 from fastapi import Depends
 from fastapi import HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
+from fastapi.security import HTTPBearer
 from fastapi_sqlalchemy import db
 from passlib.context import CryptContext
 
@@ -14,7 +14,6 @@ from utils.config import settings
 ALGORITHM = "HS256"
 LOGGER = get_logger()
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
@@ -77,5 +76,5 @@ async def very_token(token: str):
     return user
 
 
-async def get_current_user(token: str = Depends(oauth_scheme)):
-    return await very_token(token)
+async def get_current_user(token=Depends(HTTPBearer())):
+    return await very_token(token.credentials)
