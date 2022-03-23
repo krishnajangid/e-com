@@ -28,7 +28,7 @@ async def user_login_view(user: UserLoginInSchema) -> UserLoginOutSchema:
     return data
 
 
-@router.post("/user/register/")
+@router.post("/user/register/", status_code=201)
 async def user_register_view(user: UserRegisterInSchema):
     password = get_password_hash(user.password)
     user_obj = UsersModel(
@@ -39,11 +39,8 @@ async def user_register_view(user: UserRegisterInSchema):
     )
     db.session.add(user_obj)
     db.session.commit()
-
-    print(user)
-    users = db.session.query(UsersModel).all()
-
-    return users
+    
+    return {}
 
 
 @router.get("/user/me/", response_model=UserMeOutSchema)
