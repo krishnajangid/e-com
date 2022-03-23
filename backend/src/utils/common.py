@@ -1,4 +1,3 @@
-import enum
 import logging
 
 
@@ -15,10 +14,3 @@ def get_logger(level: int = logging.INFO) -> logging:
     )
 
     return logging.getLogger("e-com")
-
-
-class WeatherApiEndPoint(enum.Enum):
-    CURRENT = "current"
-    TIMEZONE = "timezone"
-    ASTRONOMY = "astronomy"
-

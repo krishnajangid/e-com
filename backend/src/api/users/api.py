@@ -1,4 +1,5 @@
 from typing import List
+from sqlalchemy.ext.declarative import declarative_base  # type: ignore
 
 from fastapi import APIRouter, status, HTTPException, Depends
 from fastapi_sqlalchemy import db
@@ -21,11 +22,11 @@ async def user_login_view(user: UserLoginInSchema) -> UserLoginOutSchema:
             headers={"Authenticate": "Bearer"}
         )
 
-    data = {
-        "access_token": await create_access_token(user.id),
-        "user_id": user.id
-    }
-    return data
+    response: UserLoginOutSchema = UserLoginOutSchema(
+        access_token=await create_access_token(user.id),
+        user_id=user.id
+    )
+    return response
 
 
 @router.post("/user/register/", status_code=201)
@@ -45,15 +46,15 @@ async def user_register_view(user: UserRegisterInSchema):
 
 @router.get("/user/me/", response_model=UserMeOutSchema)
 async def user_me_view(user: UsersModel = Depends(get_current_user)) -> UserMeOutSchema:
-    response_dict = {
-        "id": user.id,
-        "name": user.name,
-        "email": user.email,
-        "mobile": user.mobile,
-        "profile": user.profile,
-        "is_verified": user.is_verified,
-    }
-    return response_dict
+    response: UserMeOutSchema = UserMeOutSchema(
+        id=user.id,
+        name=user.name,
+        email=user.email,
+        mobile=user.mobile,
+        profile=user.profile,
+        is_verified=user.is_verified,
+    )
+    return response
 
 
 @router.get("/user/address/", response_model=List[UserAddressOutSchema])
